@@ -26,7 +26,7 @@ A full-featured ecommerce backend built with [Payload CMS](https://payloadcms.co
 ### 1. Install Dependencies
 
 ```bash
-cd ecom-payload-be
+cd eco-backend
 pnpm install
 ```
 
@@ -60,7 +60,7 @@ The backend will be available at:
 
 ## Environment Variables
 
-Create a `.env` file in the `ecom-payload-be` directory with the following variables:
+Create a `.env` file in the `eco-backend` directory with the following variables:
 
 ### Required Variables
 
@@ -125,13 +125,13 @@ The database file is automatically created on first run. No additional setup req
 
 ### Database Location
 
-- Development: `ecom-payload-be/database.db`
+- Development: `eco-backend/database.db`
 - The database file is gitignored and should not be committed
 
 ## Project Structure
 
 ```
-ecom-payload-be/
+eco-backend/
 ├── src/
 │   ├── collections/          # Payload collections (Products, Users, etc.)
 │   ├── graphql-adapter/     # Custom GraphQL shop API

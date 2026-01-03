@@ -15,7 +15,7 @@ A Progressive Web App (PWA) frontend built with [Qwik](https://qwik.builder.io) 
 
 - **Node.js** 18.17+ or 20.3+
 - **pnpm** (package manager - matches backend)
-- **Running Payload CMS Backend** (`ecom-payload-be`)
+- **Running Payload CMS Backend** (`eco-backend`)
 - **Zitadel Instance** (optional - can use mock auth for development)
 - **Matrix Homeserver** (optional - for chat feature)
 
@@ -293,7 +293,7 @@ The app uses vanilla CSS with CSS custom properties for theming. The design foll
 
 If you see "Failed to load products" errors:
 
-1. Make sure the backend is running: `cd ../ecom-payload-be && pnpm dev`
+1. Make sure the backend is running: `cd ../eco-backend && pnpm dev`
 2. Check `VITE_API_URL` in `.env` matches your backend URL
 3. Check `VITE_GRAPHQL_ENDPOINT` is `/api/shop-api/graphql`
 
