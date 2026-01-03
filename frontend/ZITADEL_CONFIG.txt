@@ -1,0 +1,68 @@
+# =============================================================================
+# COPY THIS TO YOUR .env FILE
+# =============================================================================
+# Create a file named `.env` in the frontend folder and paste this content:
+
+VITE_API_URL=http://localhost:3000
+VITE_GRAPHQL_ENDPOINT=/api/shop-api/graphql
+VITE_USE_MOCK_AUTH=false
+VITE_ZITADEL_AUTHORITY=https://hab-s3myac.us1.zitadel.cloud
+VITE_ZITADEL_CLIENT_ID=353955653380840589
+VITE_ZITADEL_REDIRECT_URI=http://localhost:5173/auth/callback
+VITE_ZITADEL_POST_LOGOUT_URI=http://localhost:5173
+VITE_ZITADEL_SCOPE=openid profile email
+VITE_ZITADEL_CLIENT_SECRET=SBdfj6iz3GCgPXdGWFy4oQxpRNfCgTejBdL3BOnmQBZi8a3b4LXGjv05GveUGLcE
+VITE_MATRIX_HOMESERVER_URL=https://matrix.org
+VITE_MATRIX_DEFAULT_ROOM_ID=!demo:matrix.org
+
+# =============================================================================
+# IMPORTANT: Configure Zitadel Application Settings
+# =============================================================================
+
+Go to: https://hab-s3myac.us1.zitadel.cloud/
+
+1. Navigate to your Project → Applications → Your App
+
+2. **Authentication Method**: Select "none"
+   (This is correct for PKCE - the client secret is NOT used in PKCE flow)
+
+3. In "Redirect URIs", add:
+   ✓ http://localhost:5173/auth/callback
+
+4. In "Post Logout Redirect URIs", add:
+   ✓ http://localhost:5173
+
+5. Make sure these settings are enabled:
+   ✓ Auth Method: PKCE
+   ✓ Grant Types: Authorization Code
+   ✓ Response Types: Code
+
+6. In "Allowed Origins" (CORS), add:
+   ✓ http://localhost:5173
+
+7. Save all changes
+
+# =============================================================================
+# HOW TO USE
+# =============================================================================
+
+1. Copy the environment variables above to `frontend/.env`
+2. Configure your Zitadel app as described above
+3. Install dependencies: pnpm install
+4. Restart your dev server: pnpm dev
+5. Click "Sign In" - you'll be redirected to Zitadel
+6. After login, you'll be redirected back to your app
+
+# =============================================================================
+# TROUBLESHOOTING
+# =============================================================================
+
+If you get "Invalid Redirect URI":
+→ Check that http://localhost:5173/auth/callback is in Zitadel's Redirect URIs
+
+If you get CORS errors:
+→ Add http://localhost:5173 to Allowed Origins in Zitadel
+
+If authentication doesn't work:
+→ Set VITE_USE_MOCK_AUTH=true to use mock authentication instead
+

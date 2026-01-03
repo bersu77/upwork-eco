@@ -1,0 +1,25 @@
+# Documentation files (not needed in git)
+*.md
+!README.md
+!ecom-payload-be/README.md
+!frontend/README.md
+
+# Store front UI (exclude from tracking)
+store-front-ui/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Editor
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
