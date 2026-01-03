@@ -33,7 +33,7 @@ pnpm install
 Copy the example environment file:
 
 ```bash
-cp env.example .env
+cp .env.example .env
 ```
 
 Edit `.env` with your configuration (see [Environment Variables](#environment-variables) below).

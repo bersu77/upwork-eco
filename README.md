@@ -75,8 +75,7 @@ cd eco-backend
 pnpm install
 
 # Create environment file
-# See eco-backend/ENV_SETUP.md for details
-cp ENV_SETUP.md .env
+cp .env.example .env
 # Edit .env with your configuration
 
 # Start development server
@@ -102,7 +101,7 @@ cd frontend
 pnpm install
 
 # Create environment file
-cp env.example .env
+cp .env.example .env
 # Edit .env with your configuration
 
 # Start development server
@@ -129,7 +128,7 @@ NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=pk_test_...
 STRIPE_WEBHOOKS_SIGNING_SECRET=whsec_...
 ```
 
-See `eco-backend/ENV_SETUP.md` for complete details.
+See `eco-backend/.env.example` for complete details.
 
 ### Frontend Environment Variables
 
@@ -152,7 +151,7 @@ VITE_USE_MOCK_AUTH=true  # For development (no Zitadel needed)
 # VITE_ZITADEL_SCOPE=openid profile email
 ```
 
-See `frontend/env.example` for complete details.
+See `frontend/.env.example` for complete details.
 
 ## 🛠️ Development
 
@@ -287,7 +286,7 @@ pnpm test          # Run tests (if configured)
 
 - **Backend README**: [`eco-backend/README.md`](eco-backend/README.md)
 - **Frontend README**: [`frontend/README.md`](frontend/README.md)
-- **Backend Environment Setup**: [`eco-backend/ENV_SETUP.md`](eco-backend/ENV_SETUP.md)
+- **Backend Environment Setup**: [`eco-backend/.env.example`](eco-backend/.env.example)
 - **Zitadel Setup**: [`frontend/ZITADEL_SETUP.md`](frontend/ZITADEL_SETUP.md)
 
 ## 🛍️ Ecommerce Features
