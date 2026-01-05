@@ -25,7 +25,7 @@ const Header = component$(() => {
       {/* Top header bar */}
       <div class="header-top">
         <div class="container header-container">
-          <Link href="/" class="logo">
+          <Link href="/" class="logo" prefetch={false}>
             <span class="logo-icon">🛒</span>
             <span class="logo-text">Shop</span>
           </Link>
@@ -53,17 +53,17 @@ const Header = component$(() => {
                   <span class="header-greeting">Hello, {authState.user?.firstName || "User"}</span>
                   <span class="header-label">Account & Lists</span>
                 </div>
-                <Link href="/auth/logout" class="header-item">
+                <Link href="/auth/logout" class="header-item" prefetch={false}>
                   <span class="header-greeting">Sign Out</span>
                 </Link>
               </>
             ) : (
-              <Link href="/auth/login" class="header-item">
+              <Link href="/auth/login" class="header-item" prefetch={false}>
                 <span class="header-label">Sign In</span>
               </Link>
             )}
             
-            <Link href="/cart" class="header-item">
+            <Link href="/cart" class="header-item" prefetch={false}>
               <span class="cart-icon">🛒</span>
               <span class="cart-count">0</span>
               <span class="header-label">Cart</span>
@@ -76,11 +76,11 @@ const Header = component$(() => {
       <div class="header-nav">
         <div class="container">
           <nav class="nav-links">
-            <Link href="/products">All Products</Link>
-            <Link href="/products?category=electronics">Electronics</Link>
-            <Link href="/products?category=fashion">Fashion</Link>
-            <Link href="/products?category=home">Home & Kitchen</Link>
-            {authState.isAuthenticated && <Link href="/chat">Chat</Link>}
+            <Link href="/products" prefetch={false}>All Products</Link>
+            <Link href="/products?category=electronics" prefetch={false}>Electronics</Link>
+            <Link href="/products?category=fashion" prefetch={false}>Fashion</Link>
+            <Link href="/products?category=home" prefetch={false}>Home & Kitchen</Link>
+            {authState.isAuthenticated && <Link href="/chat" prefetch={false}>Chat</Link>}
           </nav>
         </div>
       </div>

@@ -1,9 +1,11 @@
-import { component$ } from "@builder.io/qwik";
+import { component$, useSignal, useStore, useVisibleTask$, useComputed$ } from "@builder.io/qwik";
 import { Link, type DocumentHead } from "@builder.io/qwik-city";
 import { ProductCard } from "~/components/product/product-card";
+import { productService } from "~/services/graphql";
+import type { SearchResult } from "~/services/graphql/types";
 
 // Dummy products data
-const dummyProducts = [
+const dummyProducts: SearchResult[] = [
   {
     productId: "1",
     productName: "Wireless Bluetooth Headphones with Noise Cancellation",
@@ -151,6 +153,89 @@ const dummyProducts = [
 ];
 
 export default component$(() => {
+  const state = useStore({
+    apiProducts: [] as SearchResult[],
+    isLoading: false,
+  });
+
+  // Fetch products from API
+  useVisibleTask$(async () => {
+    try {
+      state.isLoading = true;
+      console.log('[HOME PAGE] Starting to fetch API products...');
+      const result = await productService.searchProducts({
+        groupByProduct: true,
+        take: 20,
+        skip: 0,
+      });
+      const items = result.items || [];
+      state.apiProducts = items;
+      console.log('[HOME PAGE] Fetched API products:', items.length, items);
+      console.log('[HOME PAGE] API product names:', items.map(p => p.productName));
+    } catch (err) {
+      console.error("Error fetching products for home page:", err);
+      // Silently fail - just show dummy products
+      state.apiProducts = [];
+    } finally {
+      state.isLoading = false;
+    }
+  });
+
+  // Get first 8 products for "Today's Deals" - prioritize API products
+  const dealsProducts = useComputed$(() => {
+    const apiItems = state.apiProducts;
+    console.log('[HOME PAGE] Computing deals products, API count:', apiItems.length);
+    
+    // Take up to 8 products, prioritizing API products first
+    if (apiItems.length >= 8) {
+      const result = apiItems.slice(0, 8);
+      console.log('[HOME PAGE] Using 8 API products for deals');
+      return result;
+    } else if (apiItems.length > 0) {
+      // Mix: API products first, then fill with dummy products
+      const apiCount = apiItems.length;
+      const dummyCount = 8 - apiCount;
+      const result = [
+        ...apiItems,
+        ...dummyProducts.slice(0, dummyCount)
+      ];
+      console.log('[HOME PAGE] Mixing products:', {
+        apiCount,
+        dummyCount,
+        total: result.length,
+        apiProducts: apiItems.map(p => p.productName)
+      });
+      return result;
+    } else {
+      // No API products, just show dummy products
+      console.log('[HOME PAGE] No API products, using dummy products');
+      return dummyProducts.slice(0, 8);
+    }
+  });
+
+  // Get next 4 products for "Popular Products"
+  const popularProducts = useComputed$(() => {
+    const apiItems = state.apiProducts;
+    const dealsCount = dealsProducts.value.length;
+    
+    // If we have more API products after the deals section, use them
+    if (apiItems.length > dealsCount) {
+      const remainingApi = apiItems.length - dealsCount;
+      const needed = Math.min(4, remainingApi);
+      const result = apiItems.slice(dealsCount, dealsCount + needed);
+      
+      // Fill remaining slots with dummy products if needed
+      if (result.length < 4) {
+        const dummyNeeded = 4 - result.length;
+        return [...result, ...dummyProducts.slice(0, dummyNeeded)];
+      }
+      return result;
+    } else {
+      // Use dummy products
+      const startIndex = Math.max(0, dealsCount - apiItems.length);
+      return dummyProducts.slice(startIndex, startIndex + 4);
+    }
+  });
 
   return (
     <>
@@ -160,7 +245,7 @@ export default component$(() => {
           <div class="hero-content">
             <h1>Welcome to your one-stop shop</h1>
             <p>Find everything you need from electronics to fashion</p>
-            <Link href="/products" class="btn btn-primary hero-cta">
+            <Link href="/products" class="btn btn-primary hero-cta" prefetch={false}>
               Shop Now
             </Link>
           </div>
@@ -173,22 +258,22 @@ export default component$(() => {
           <div class="category-card">
             <h3>Electronics</h3>
             <img src="/placeholder-electronics.jpg" alt="Electronics" />
-            <Link href="/products?category=electronics">Shop now</Link>
+            <Link href="/products?category=electronics" prefetch={false}>Shop now</Link>
           </div>
           <div class="category-card">
             <h3>Fashion</h3>
             <img src="/placeholder-fashion.jpg" alt="Fashion" />
-            <Link href="/products?category=fashion">Shop now</Link>
+            <Link href="/products?category=fashion" prefetch={false}>Shop now</Link>
           </div>
           <div class="category-card">
             <h3>Home & Kitchen</h3>
             <img src="/placeholder-home.jpg" alt="Home" />
-            <Link href="/products?category=home">Shop now</Link>
+            <Link href="/products?category=home" prefetch={false}>Shop now</Link>
           </div>
           <div class="category-card">
             <h3>Books</h3>
             <img src="/placeholder-books.jpg" alt="Books" />
-            <Link href="/products?category=books">Shop now</Link>
+            <Link href="/products?category=books" prefetch={false}>Shop now</Link>
           </div>
         </div>
 
@@ -196,11 +281,11 @@ export default component$(() => {
         <section class="deals-section">
           <div class="section-header">
             <h2>Today's Deals</h2>
-            <Link href="/products" class="see-more">See all deals</Link>
+            <Link href="/products" class="see-more" prefetch={false}>See all deals</Link>
           </div>
 
           <div class="products-grid">
-            {dummyProducts.slice(0, 8).map((product) => (
+            {dealsProducts.value.map((product) => (
               <ProductCard key={product.productId} product={product} />
             ))}
           </div>
@@ -210,11 +295,11 @@ export default component$(() => {
         <section class="deals-section">
           <div class="section-header">
             <h2>Popular Products</h2>
-            <Link href="/products" class="see-more">See more</Link>
+            <Link href="/products" class="see-more" prefetch={false}>See more</Link>
           </div>
 
           <div class="products-grid">
-            {dummyProducts.slice(8).map((product) => (
+            {popularProducts.value.map((product) => (
               <ProductCard key={product.productId} product={product} />
             ))}
           </div>
@@ -225,7 +310,7 @@ export default component$(() => {
           <div class="promo-content">
             <h2>Sign up and get 20% off your first order</h2>
             <p>Plus, get free shipping on orders over $35</p>
-            <Link href="/auth/signup" class="btn btn-primary">
+            <Link href="/auth/signup" class="btn btn-primary" prefetch={false}>
               Sign Up Now
             </Link>
           </div>

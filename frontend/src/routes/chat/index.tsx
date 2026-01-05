@@ -5,7 +5,7 @@ import {
   useVisibleTask$,
   $,
 } from "@builder.io/qwik";
-import { useNavigate, type DocumentHead } from "@builder.io/qwik-city";
+import { useNavigate, Link, type DocumentHead } from "@builder.io/qwik-city";
 import { useAuthState } from "~/services/auth";
 import { matrixService, type MatrixMessage } from "~/services/matrix";
 import { config } from "~/services/config";
@@ -102,9 +102,9 @@ export default component$(() => {
         <div class="auth-required">
           <h1>Login Required</h1>
           <p>You need to be logged in to access the chat.</p>
-          <a href="/auth/login" class="btn btn-primary">
+          <Link href="/auth/login" class="btn btn-primary" prefetch={false}>
             Login
-          </a>
+          </Link>
         </div>
       </div>
     );
