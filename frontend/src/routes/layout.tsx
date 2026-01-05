@@ -59,8 +59,7 @@ const Header = component$(() => {
               </>
             ) : (
               <Link href="/auth/login" class="header-item">
-                <span class="header-greeting">Hello, sign in</span>
-                <span class="header-label">Account & Lists</span>
+                <span class="header-label">Sign In</span>
               </Link>
             )}
             
