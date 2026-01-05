@@ -13,7 +13,7 @@ import {
   type QRL,
   $,
 } from "@builder.io/qwik";
-import { authService } from "./auth-service";
+import { activeAuthService } from "./index";
 import type { AuthState, User } from "./auth-types";
 
 export interface AuthContextValue {
@@ -42,7 +42,7 @@ export const AuthProvider = component$(() => {
     try {
       state.isLoading = true;
       state.error = null;
-      await authService.initiateLogin();
+      await activeAuthService.initiateLogin();
     } catch (error) {
       state.error = error instanceof Error ? error.message : "Login failed";
       state.isLoading = false;
@@ -54,7 +54,7 @@ export const AuthProvider = component$(() => {
     state.user = null;
     state.accessToken = null;
     state.idToken = null;
-    authService.logout();
+    activeAuthService.logout();
   });
 
   const setUser = $((user: User | null) => {
@@ -77,15 +77,21 @@ export const AuthProvider = component$(() => {
 
   // Initialize auth state on mount
   useVisibleTask$(() => {
-    const user = authService.getUser();
-    const accessToken = authService.getAccessToken();
-    const idToken = authService.getIdToken();
+    const user = activeAuthService.getUser();
+    const accessToken = activeAuthService.getAccessToken();
+    const idToken = activeAuthService.getIdToken();
 
     if (user && accessToken) {
       state.user = user;
       state.accessToken = accessToken;
       state.idToken = idToken;
       state.isAuthenticated = true;
+    } else {
+      // Ensure state is cleared if no valid auth data
+      state.isAuthenticated = false;
+      state.user = null;
+      state.accessToken = null;
+      state.idToken = null;
     }
 
     state.isLoading = false;

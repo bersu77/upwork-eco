@@ -10,6 +10,20 @@ const schema = makeExecutableSchema({
   resolvers,
 })
 
+// Get frontend URL from environment or use defaults
+const QWIK_FRONTEND_URL = process.env.QWIK_FRONTEND_URL || 'http://localhost:5173'
+const FRONTEND_URL = process.env.FRONTEND_URL || QWIK_FRONTEND_URL
+
+// Build CORS origins list - allow common development ports
+const corsOrigins = [
+  QWIK_FRONTEND_URL,
+  FRONTEND_URL,
+  'http://localhost:3000',
+  'http://localhost:5173',
+  'http://localhost:5174',
+  'http://localhost:8080',
+].filter((url, index, self) => self.indexOf(url) === index) // Remove duplicates
+
 // Temporary storage for auth tokens per request
 // Key: request URL + timestamp, Value: auth token
 const authTokenStore = new Map<string, string>()
@@ -29,7 +43,7 @@ const yoga = createYoga<GraphQLContext>({
     return ctx
   },
   cors: {
-    origin: ['http://localhost:8080', 'http://localhost:3000'],
+    origin: corsOrigins,
     credentials: true,
     exposedHeaders: ['vendure-auth-token', 'cart-secret'],
   },

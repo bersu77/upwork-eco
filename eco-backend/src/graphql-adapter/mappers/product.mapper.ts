@@ -117,11 +117,13 @@ export function mapVariants(product: any): any[] {
         productTitle: product.title,
       })
       
+      const price = variantData.priceInUSD || product.priceInUSD || 0
       variants.push({
         id: variantId,
         name: variantData.title || product.title,
         sku: variantData.sku || `${product.id}-${variantData.id}`,
-        priceWithTax: variantData.priceInUSD || product.priceInUSD || 0,
+        price: price,
+        priceWithTax: price,
         currencyCode: 'USD',
         stockLevel: getStockLevel(variantData.inventory),
         featuredAsset: variantData.gallery?.[0]?.image 
@@ -140,11 +142,13 @@ export function mapVariants(product: any): any[] {
       productTitle: product.title,
     })
     
+    const defaultPrice = product.priceInUSD || 0
     variants.push({
       id: defaultVariantId,
       name: product.title,
       sku: product.sku || `PROD-${product.id}`,
-      priceWithTax: product.priceInUSD || 0,
+      price: defaultPrice,
+      priceWithTax: defaultPrice,
       currencyCode: 'USD',
       stockLevel: getStockLevel(product.inventory),
       featuredAsset: product.gallery?.[0]?.image ? mapAsset(product.gallery[0].image) : null,

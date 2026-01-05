@@ -10,10 +10,16 @@ export const productResolvers = {
         let product
 
         if (args.id) {
-          product = await payload.findByID({
+          const result = await payload.find({
             collection: 'products',
-            id: args.id,
+            where: {
+              and: [
+                { id: { equals: args.id } },
+                { _status: { equals: 'published' } },
+              ],
+            },
             depth: 3,
+            limit: 1,
             populate: {
               variants: {
                 title: true,
@@ -24,13 +30,19 @@ export const productResolvers = {
               },
             },
           })
+          product = result.docs[0]
         } else if (args.slug) {
           const result = await payload.find({
             collection: 'products',
             where: {
-              slug: {
-                equals: args.slug,
-              },
+              and: [
+                {
+                  slug: {
+                    equals: args.slug,
+                  },
+                },
+                { _status: { equals: 'published' } },
+              ],
             },
             depth: 3,
             limit: 1,
@@ -114,12 +126,23 @@ export const productResolvers = {
           }
         }
 
+        const take = input.take || 50
+        const skip = input.skip || 0
+        const page = Math.floor(skip / take) + 1
+
+        console.log('[SEARCH DEBUG] Query params:', {
+          take,
+          skip,
+          page,
+          where,
+        })
+
         const result = await payload.find({
           collection: 'products',
           where,
           depth: 3,
-          limit: input.take || 24,
-          page: input.skip ? Math.floor(input.skip / (input.take || 24)) + 1 : 1,
+          limit: take,
+          page: page,
           populate: {
             facetValues: {
               name: true,
@@ -127,6 +150,16 @@ export const productResolvers = {
               facet: true,
             },
           },
+        })
+
+        console.log('[SEARCH DEBUG] Found products:', {
+          totalDocs: result.totalDocs,
+          docsCount: result.docs.length,
+          firstProduct: result.docs[0] ? {
+            id: result.docs[0].id,
+            title: result.docs[0].title,
+            status: result.docs[0]._status,
+          } : null,
         })
 
         const facetValues = await calculateFacetValues(result.docs, payload)
