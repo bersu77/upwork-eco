@@ -1,5 +1,5 @@
 import { component$ } from "@builder.io/qwik";
-import { type DocumentHead } from "@builder.io/qwik-city";
+import { Link, type DocumentHead } from "@builder.io/qwik-city";
 import { useAuth, activeAuthService } from "~/services/auth";
 
 export default component$(() => {
@@ -34,7 +34,7 @@ export default component$(() => {
         </button>
 
         <p class="signup-link">
-          Don't have an account? <a href="/auth/signup">Sign up</a>
+          Don't have an account? <Link href="/auth/signup" prefetch={false}>Sign up</Link>
         </p>
       </div>
 
