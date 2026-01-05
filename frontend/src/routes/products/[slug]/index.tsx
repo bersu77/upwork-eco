@@ -1,5 +1,5 @@
 import { component$, Resource, useResource$, useSignal, $ } from "@builder.io/qwik";
-import { useLocation, type DocumentHead } from "@builder.io/qwik-city";
+import { useLocation, Link, type DocumentHead } from "@builder.io/qwik-city";
 import { productService } from "~/services/graphql";
 import type { ProductVariant, Asset } from "~/services/graphql/types";
 import { formatPrice } from "~/utils/format";
@@ -38,9 +38,9 @@ export default component$(() => {
         onRejected={(error) => (
           <div class="error-state">
             <p>Failed to load product: {error.message}</p>
-            <a href="/products" class="btn btn-secondary">
+            <Link href="/products" class="btn btn-secondary" prefetch={false}>
               Back to Products
-            </a>
+            </Link>
           </div>
         )}
         onResolved={(product) => {
@@ -49,9 +49,9 @@ export default component$(() => {
               <div class="not-found">
                 <h1>Product Not Found</h1>
                 <p>The product you're looking for doesn't exist.</p>
-                <a href="/products" class="btn btn-primary">
+                <Link href="/products" class="btn btn-primary" prefetch={false}>
                   Browse Products
-                </a>
+                </Link>
               </div>
             );
           }
@@ -73,9 +73,9 @@ export default component$(() => {
             <div class="product-page">
               {/* Breadcrumb */}
               <nav class="breadcrumb">
-                <a href="/">Home</a>
+                <Link href="/" prefetch={false}>Home</Link>
                 <span>/</span>
-                <a href="/products">Products</a>
+                <Link href="/products" prefetch={false}>Products</Link>
                 <span>/</span>
                 <span>{product.name}</span>
               </nav>
@@ -229,7 +229,7 @@ export default component$(() => {
                       <span>Categories: </span>
                       {product.collections.map((col, i) => (
                         <span key={col.id}>
-                          <a href={`/products?collection=${col.slug}`}>{col.name}</a>
+                          <Link href={`/products?collection=${col.slug}`} prefetch={false}>{col.name}</Link>
                           {i < product.collections.length - 1 && ", "}
                         </span>
                       ))}

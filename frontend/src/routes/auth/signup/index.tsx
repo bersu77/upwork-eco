@@ -1,5 +1,5 @@
 import { component$ } from "@builder.io/qwik";
-import { type DocumentHead } from "@builder.io/qwik-city";
+import { Link, type DocumentHead } from "@builder.io/qwik-city";
 import { useAuth } from "~/services/auth";
 
 export default component$(() => {
@@ -30,7 +30,7 @@ export default component$(() => {
         </button>
 
         <p class="login-link">
-          Already have an account? <a href="/auth/login">Sign in</a>
+          Already have an account? <Link href="/auth/login" prefetch={false}>Sign in</Link>
         </p>
       </div>
 

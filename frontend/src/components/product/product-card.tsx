@@ -11,7 +11,7 @@ export const ProductCard = component$<ProductCardProps>(({ product }) => {
   const priceDisplay = getPriceDisplay(product.priceWithTax, product.currencyCode);
 
   return (
-    <Link href={`/products/${product.slug}`} class="amazon-product-card">
+    <Link href={`/products/${product.slug}`} class="amazon-product-card" prefetch={false}>
       <div class="product-image-container">
         {product.productAsset ? (
           <img
